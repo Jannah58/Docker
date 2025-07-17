@@ -14,12 +14,4 @@ Open your browser and navigate to:
 
 If everything is running correctly, you’ll see your React app live!
 
-🛠️ Notes
-Make sure Docker is installed and running on your machine.
 
-If you make changes to the frontend code, you may need to rebuild:
-
-bash
-Copy
-Edit
-docker-compose up --build
