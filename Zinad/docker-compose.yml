@@ -20,6 +20,44 @@ services:
     networks:
       - app-network
 
+  # Ollama service for running LLMs
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    networks:
+      - app-network
+    # GPU support (uncomment if you have GPU)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # AI service using LangChain + FastAPI
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama
+    networks:
+      - app-network
+    volumes:
+      - ./ai-service:/app
+    restart: unless-stopped
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  ollama_data:
